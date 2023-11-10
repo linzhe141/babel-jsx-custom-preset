@@ -1,8 +1,18 @@
 # jsx 本质
 
 `jsx`是 JavaScript 的一个类似 XML 的扩展，虽然最早是由 react 提出的，但实际上 JSX 语法并没有定义运行时语义，
-并且能被编译成各种不同的输出形式，`jsx`可以由很多工具进行转换为`js`，比如`Babel`和`TypeScript`，
-接下来就通过 babel 和 ts 创建属于自己的 jsx
+并且能被编译成[各种不同的输出形式](https://cn.vuejs.org/guide/extras/render-function.html#jsx-tsx)，
+`jsx`可以由很多工具进行转换为`js`，比如`Babel`和`TypeScript`，接下来就通过 babel 和 ts 创建属于自己的 jsx
+
+<div className='flex'>
+  <span>
+    <Underline>
+      <a href='https://github.com/linzhe141/babel-jsx-custom-preset'>
+        <span>案例源码</span>
+      </a>
+    </Underline>
+  </span>
+</div>
 
 ### 1、TypeScript 转换
 
@@ -67,7 +77,7 @@ pnpm i -D typescript
 
 ### 2、通过 Babel 插件转换成自定义的 jsx
 
-参考`react`比如有这么一个函数`Dom`，用来创建属于自己的虚拟节点
+参考`React.createElement`，假设存在一个函数`Dom`，用来创建属于自己的虚拟节点
 
 ```ts
 function Dom(tagName: string, props: Record<string, any>, ...children: CustomVNode[]): CustomVNode{
@@ -81,7 +91,7 @@ function Dom(tagName: string, props: Record<string, any>, ...children: CustomVNo
 pnpm i -D @babel/cli @babel/core @babel/plugin-syntax-jsx
 ```
 
-- 编写自定义的 bable 插件
+- [编写自定义的 babel 插件](https://juejin.cn/post/6918555538628280333)
 
   ```js
   // custom-plugin.js
@@ -104,13 +114,13 @@ pnpm i -D @babel/cli @babel/core @babel/plugin-syntax-jsx
             );
             return result;
           }, []);
-          const creaateIdentifier = t.identifier("Dom");
-          // 生成Dom('div', {class:'xxx'}, '123')
+          const createIdentifier = t.identifier("Dom");
           const args = [
             t.stringLiteral(tagName),
             t.objectExpression(propsList),
           ];
-          const callRCExpression = t.callExpression(creaateIdentifier, args);
+          // Dom('div', {class:'xxx',id: 'test'})
+          const callRCExpression = t.callExpression(createIdentifier, args);
           callRCExpression.arguments = callRCExpression.arguments.concat(
             path.node.children
           );
@@ -135,7 +145,7 @@ pnpm i -D @babel/cli @babel/core @babel/plugin-syntax-jsx
   }
   ```
 
-- 对 ts 编译的产物，再次进行转换，就可以得到自定义得 jsx 产物了
+- 对 ts 编译后的产物，再次进行转换，就可以得到自定义的 jsx 了
 
   ```bash
   npx babel dist/input.jsx --out-file dist/output.js
