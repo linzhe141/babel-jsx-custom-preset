@@ -1,0 +1,11 @@
+{
+  "compilerOptions": {
+    "strict": true,
+    "target": "ES5",
+    "module": "ESNext",
+    "jsx": "preserve",
+    "outDir": "dist",
+    "types": ["./type.d.ts"]
+  },
+  "include": ["input.tsx"]
+}

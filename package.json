@@ -1,0 +1,13 @@
+{
+  "scripts": {
+    "compileTS": "rm -rf dist && tsc",
+    "compileJS": "babel dist/input.jsx --out-file dist/output.js",
+    "build": "pnpm compileTS && pnpm compileJS"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.23.0",
+    "@babel/core": "^7.23.3",
+    "@babel/plugin-syntax-jsx": "^7.23.3",
+    "typescript": "^5.2.2"
+  }
+}
